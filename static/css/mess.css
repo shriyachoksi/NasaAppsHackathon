@@ -1,0 +1,60 @@
+.main_body{
+    display: flex;
+    height: 93vh;
+}
+
+.main_body ul{
+    width: 30vw;
+    height: 100%;
+    background-color: blueviolet;
+}
+
+.user_li{
+    padding: .5rem;
+}
+
+.usr_div{
+    display: flex;
+}
+.usr_icon{
+    height: 3rem;
+    width: 3rem;
+}
+.user_name{
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: auto;
+    margin-top: auto;
+    font-size: 2rem;
+}
+.chat_section{
+    height: 100%;
+    width: 70vw;
+    background-image: url("../images/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+     margin: 0;
+     padding: 0;
+}
+.chat_box{
+    display: flex;
+    position: fixed;
+    bottom: 1rem;
+    left: 31vw;
+}
+#message{
+    font-size: 1.5rem;
+    width: 63vw;
+    height: 3rem;
+    border: none;
+    border-radius: 5px;
+}
+.snd{
+    margin-left: 1rem;
+    background: transparent;
+    border: none;
+}
+.material-symbols-outlined{
+    color: white;
+    font-size: 3rem;
+}

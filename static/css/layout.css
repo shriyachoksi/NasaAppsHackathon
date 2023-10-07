@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+/* body{
+    background-image: url("../images/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+     margin: 0;
+     padding: 0;
+ } */
+ .signup{
+     border-color: white;
+     border-radius: 30px;    
+     width: auto;
+     height: auto;
+     padding: 5px;
+     border-style: solid;
+ }
+ 
+ 
+ .navbar {
+     font-family: 'Courier New', Courier, monospace;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 10px 20px;
+     background-color: #5C469C;
+     color: white;
+     height: 5vh;
+ }
+ 
+ 
+ .logo {
+     width: 70px; /* Adjust the width as needed */
+     height: 70px;
+     padding: 0;
+ }
+ 
+ .spacer {
+     flex: 1;
+ }
+ 
+ .nav-links, .logo-container {
+     display: flex;
+     gap: 20px; /* Adjust the space between nav-links items as needed */
+ 
+ }
+ .nav-links h4:hover {
+     cursor: pointer;
+     color: black; /* Change the text color on hover */
+ }
+ 
+ .nav-links h4 a{
+     text-decoration: none white;
+     color: white;
+ }
+ 

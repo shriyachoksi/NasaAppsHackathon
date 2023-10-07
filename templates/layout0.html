@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novalink</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/master.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
     {% block css %}
     {% endblock css %}
 </head>
@@ -26,19 +27,12 @@
         <h3 id="name">Novalink</h3>
         <div class="spacer"></div>
         <div class="nav-links">
-            <h4 class="sp"><a href="/login">Login</a></h4>
+            <h4 class="sp"><a href="/projectSeekers">Project_Seekers</a></h4>
+            <h4 class="sp"><a href="/projectMakers">Project_Makers</a></h4>
+            <h4 class="sp"><a href="/messages">Messages</a></h4>
         </div>
-        <h4 class="sp"><a href="/signup">Signup</a></h4>
     </div>
     {% block body %}
 {% endblock body %}
-<script>
-    if (window.location.pathname=="/login"){
-        document.getElementsByClassName("sp")[1].classList.add("signup")
-    }
-    else{
-        document.getElementsByClassName("sp")[0].classList.add("signup")
-    }
-</script>
 </body>
 </html>

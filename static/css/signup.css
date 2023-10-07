@@ -29,7 +29,7 @@
     color: #ccc; /* Set placeholder text color */
     text-decoration: #ccc;
 }
-.personal-data input[type="date"] {
+.personal-data input[type="number"] {
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 10px;
@@ -53,6 +53,8 @@
     outline: none;
     border-color: #4CAF50; /* Add focus border color */
 }
+
+
 .name-container {
     display: flex;
     justify-content: space-between;
@@ -60,18 +62,7 @@
 .name-container input[type="text"]:first-child {
     margin-right: 40px;
 }
-.next-button{
-    text-decoration: none; /* Remove the default underline */
-    color: black; /* Set the color to a color of your choice */
-    cursor: pointer; /* Change the cursor to a pointer on hover */
-}
-.next-button{
+/* .next-button{
     background-color: yellow;
-    border: none;
-    text-decoration: none;
-    color: black;
-    cursor: pointer;
-    padding: 10px 20px;
-border-radius: 30px;
-margin-right: 30px;
-}
+    width: 100px;
+} */

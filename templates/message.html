@@ -1,0 +1,37 @@
+{% extends 'layout0.html' %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mess.css') }}">
+{% endblock css %}
+{% block body %}
+
+    <main class="main_body">
+        <ul>
+            <!--  -->
+            <li class="user_li">
+                <div class="usr_div">
+                    <img class="usr_icon" src="{{ url_for('static', filename='images/user.png') }}" alt="User Icon" srcset="">
+                    <span class="user_name">
+                        User
+                    </span>
+                </div>
+            </li>
+            <hr>
+            <!--  -->
+        </ul>
+        <section class="chat_section">
+            <div class="chat_box">
+                <input type="text" name="message" id="message" placeholder="Enter Your Message...">
+                <button class="snd"><span class="material-symbols-outlined">send</span></button>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function() {
+            socket.emit('my event', {data: 'I\'m connected!'});
+        });
+    </script>
+
+{% endblock %}

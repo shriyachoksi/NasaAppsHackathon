@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+
+{% block body %}
+    
+<!--Login-->
+<div class="form-container">
+    <form method="post" action="/otp" class="personal-data">
+            <h2 align="center">OTP Verification</h2><hr>
+        <input type="password" id="password" name="otp" placeholder="Password"><br>
+        <button type="submit" class="login">Submit</button>
+    </form>
+    </div> 
+    
+{% endblock body %}

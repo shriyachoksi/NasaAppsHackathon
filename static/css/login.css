@@ -27,6 +27,12 @@
     box-sizing: border-box; /* Include padding and border in element's total width and height */
     background-color: transparent; /* Set background color to transparent */
 }
+
+input{
+    color: white;
+    text-decoration: white;
+}
+
 .login{
     background-color: yellow;
     border: none;
