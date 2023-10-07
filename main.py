@@ -5,6 +5,18 @@ from functools import wraps
 from flask_pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from hashlib import sha256
+import smtplib, json
+
+#SMTP
+with open("adminInfo.json", "r") as f:
+    adminInfo=json.load(f)["AdminInfo"]
+host = smtplib.SMTP('smtp.gmail.com', 587)
+host.starttls()
+host.login(adminInfo["adminEmail"], adminInfo["adminPassword"])
+# host.sendmail(adminInfo["adminEmail"], ["pjpanot260305@gmail.com"], "This is a Trial message!")
+# host.close()
+
+# print(adminInfo["adminEmail"])
 
 #initialization of Flask app
 app = Flask(__name__)
@@ -25,30 +37,15 @@ Messages=mongo.db.messages
 Skills=mongo.db.skills
 Interests=mongo.db.interests
 
+def encode(text):
+    return sha256(sha256(text.encode("utm-8")).hexdigest().encode("utm-8")).hexdigest()
 
-class User:
-    username=""
-    connections=[]
-    connection_req=[]
-    interests=[]
-    available=False
-    edu_qual=""
-    location=[]
-    def __init__(self, username, connections, connection_req, interests, available, edu_qual, location) -> None:
-        self.username=username
-        self.connections=connections
-        self.connection_req=self.connection_req
-        self.interests=interests
-        self.available=available
-        self.edu_qual=edu_qual
-        self.location=location
-
-
+User={}
 #decorator to check if user is logged in
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        if "logged_in" in session:
+        if session["logged_in"]:
             return f(*args, **kwargs)
         else:
             flash("You need to login first")
@@ -62,18 +59,33 @@ def login():
 @app.post("/login")
 def login_post():
     user= request.form.get('username')
-    passw = request.form.get('pass')
+    passw = encode(request.form.get("pass"))
 
     if (Users.count_documents({"username":user, "password": passw})):
         session["logged_in"]=True
         usr=Users.find_one({"username":user, "password":passw})
-        # session["User"]=User(username=usr.get("username"), username=usr.get("username"), username=usr.get("username"), username=usr.get("username"), username=usr.get("username"), username=usr.get("username"), username=usr.get("username"), username=usr.get("username"))
-    return "This is Login Page with Post Method!"
+        session['usrname']=usr['_id']
+        return redirect("/")
+
+#signup function
+@app.get("/signup")
+def signup():
+    return "This is Login Page!"
+@app.post("/signup")
+def signup_post():
+    user= request.form.get('username')
+    passw = encode(request.form.get("pass"))
+
+    if (Users.count_documents({"username":user, "password": passw})):
+        session["logged_in"]=True
+        usr=Users.find_one({"username":user, "password":passw})
+        session['usrname']=usr['_id']
+        return redirect("/")
 
 #home function
 @app.get("/")
 def home():
-    print(Users.find_one({"email":"email@gmail.com"}))
+    # print(Users.find_one({"email":"email@gmail.com"}))
     return ""
 
 #logout function
