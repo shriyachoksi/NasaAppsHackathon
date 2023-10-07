@@ -38,7 +38,7 @@ Skills=mongo.db.skills
 Interests=mongo.db.interests
 
 def encode(text):
-    return sha256(sha256(text.encode("utm-8")).hexdigest().encode("utm-8")).hexdigest()
+    return sha256(sha256(text.encode("ascii")).hexdigest().encode("ascii")).hexdigest()
 
 User={}
 #decorator to check if user is logged in
@@ -55,22 +55,25 @@ def login_required(f):
 #login functions
 @app.get("/login")
 def login():
-    return "This is Login Page!"
+    return render_template("login.html")
 @app.post("/login")
 def login_post():
-    user= request.form.get('username')
+    email= request.form.get('email')
     passw = encode(request.form.get("pass"))
-
-    if (Users.count_documents({"username":user, "password": passw})):
+    print(email)
+    print(passw)
+    if (Users.count_documents({"email":email, "password": passw})):
         session["logged_in"]=True
-        usr=Users.find_one({"username":user, "password":passw})
+        usr=Users.find_one({"email":email, "password":passw})
         session['usrname']=usr['_id']
         return redirect("/")
+    flash("User not found!")
+    return redirect("/login")
 
 #signup function
 @app.get("/signup")
 def signup():
-    return "This is Login Page!"
+    return render_template("signup.html")
 @app.post("/signup")
 def signup_post():
     user= request.form.get('username')
@@ -86,7 +89,7 @@ def signup_post():
 @app.get("/")
 def home():
     # print(Users.find_one({"email":"email@gmail.com"}))
-    return ""
+    return render_template("login.html")
 
 #logout function
 @app.get("/logout")

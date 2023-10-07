@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock css %}
+{% block body %}
+    
+<!--Sign up-->
+<div class="form-container">
+<div class="sign-up">
+<form class="personal-data">
+    <h2 align="center">Personal Data</h2><hr>
+    <div class="name-container">
+        <input type="text" id="fname" name="fname" placeholder="First Name:">
+        <input type="text" id="lname" name="lname" placeholder="Last name"><br>
+    </div> 
+    <label for="email"></label><br>
+    <input type="email" id="email" name="email" placeholder="Email"><br>
+    <br>
+    <label for="bday">Birthdate:</label>
+    <input type="date" id="bday" name="bday">
+</div>      
+</form><br>
+
+<!--Next button-->
+<a href="/next" class="next-button">Next</a>
+</div>
+{% endblock body %}
