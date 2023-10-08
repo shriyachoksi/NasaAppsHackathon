@@ -30,7 +30,7 @@
     <div class="section">
         <div class="edu_qual">
             <h2>Contact Details:</h2>
-            <span>Email: <a href="mailto:{{ session['email'] }}">{{ session['email'] }}</a></span>
+            <span>Email: <a href="mailto:{{ user.email }}">{{ user.email }}</a></span>
         </div>
     </div>
     <hr>
@@ -48,4 +48,4 @@
     </div>
 </div>
 <script src="scripts.js"></script>
-{% endblock body %}
+{% endblock %}

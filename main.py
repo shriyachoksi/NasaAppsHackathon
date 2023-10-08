@@ -37,7 +37,6 @@ Interests=mongo.db.interests
 def encode(text):
     return sha256(sha256(text.encode("ascii")).hexdigest().encode("ascii")).hexdigest()
 
-User={}
 #decorator to check if user is logged in
 def login_required(f):
     @wraps(f)
@@ -104,7 +103,7 @@ def otp_var():
 
 @app.post("/otp")
 def post_otp():
-    if encode(request.form.get("otp")) == session["otp"]:
+    if encode(request.form.get("0")+request.form.get("1")+request.form.get("2")+request.form.get("3")+request.form.get("4")+request.form.get("5")) == session["otp"]:
         Users.insert_one(temp_user["user"])
         print(temp_user["user"])
         session["logged_in"]=True
@@ -113,9 +112,18 @@ def post_otp():
     flash("Wrong OTP!")
     return redirect("/otp")
 #home function
+
+@app.get("/project-place")
+def projectPlace():
+    return render_template("projectplace.html")
+
+@app.get("/apply")
+def apply():
+    return render_template("apply.html")
 @app.get("/")
 @login_required
 def home():
+
     usr=Users.find_one({"userID":session["username"]})
     return render_template("index.html", user=usr)
 
@@ -146,6 +154,10 @@ def logout():
     flash("You have been logged out!")
     return redirect(url_for("login"))
 
+@app.get("/friends")
+def friends():
+    return render_template("")
+
 @app.get("/messages")
 @login_required
 def messages():
@@ -159,16 +171,19 @@ def messages():
 @app.get("/messages/<message_url>")
 @login_required
 def Urlmessages(message_url):
-    messages = Messages.find_one({"message_url":message_url})
-    if session["username"] not in messages["auth"]:
+    messages = list(Messages.find({"message_url":message_url}))
+    if session["username"] not in messages[0]["auth"]:
         flash("User Not Allowed!")
         return redirect("/messages")
+    auth = messages[0]["auth"]
+    auth.remove(session["username"])
+    receiver = auth[0]
     usr = Users.find_one({"userID":session["username"]})
     if "contacts" in usr:
         contacts = usr["contacts"]
     else:
         contacts=[]
-    return render_template("message.html", messages=messages["messages"], contacts=contacts)
+    return render_template("message.html", messages=messages,message_url=message_url, contacts=contacts, receiver=receiver)
 
 @socket.on('check_usrname')
 def check_usrname(json):
@@ -177,10 +192,11 @@ def check_usrname(json):
         socket.emit("username_not_available")
     else:
         socket.emit("username_available")
-
 @socket.on('message')
 def handle_my_custom_event(json):
-    print('received json: ' + str(json))
+    # print(Messages.find_one())
+    Messages.insert_one(json["message"])
+    socket.emit('received_message', list(Messages.find({"message_url":json["url"]})))
 
 if __name__ == "__main__":
     socket.run(app, host="0.0.0.0", port=5500, debug=True)
