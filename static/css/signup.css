@@ -47,9 +47,7 @@
 
 
 /* Remove default border and outline styles for input elements */
-.personal-data input[type="text"]:focus,
-.personal-data input[type="email"]:focus,
-.personal-data input[type="date"]:focus {
+.usrinp{
     outline: none;
     border-color: #4CAF50; /* Add focus border color */
 }

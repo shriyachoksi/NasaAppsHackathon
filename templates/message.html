@@ -7,21 +7,28 @@
     <main class="main_body">
         <ul>
             <!--  -->
+            {% for contact in contacts %}                
             <li class="user_li">
                 <div class="usr_div">
                     <img class="usr_icon" src="{{ url_for('static', filename='images/user.png') }}" alt="User Icon" srcset="">
                     <span class="user_name">
-                        User
+                        {{ contact }}
                     </span>
                 </div>
             </li>
             <hr>
+            {% endfor %}
             <!--  -->
         </ul>
         <section class="chat_section">
+            <div class="userDisp">
+                {% for message in messages %}
+                    {{ message.message }}
+                {% endfor %}
+            </div>
             <div class="chat_box">
                 <input type="text" name="message" id="message" placeholder="Enter Your Message...">
-                <button class="snd"><span class="material-symbols-outlined">send</span></button>
+                <button onclick="snd()" class="snd"><span class="material-symbols-outlined">send</span></button>
             </div>
         </section>
     </main>
@@ -29,9 +36,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
         var socket = io();
-        socket.on('connect', function() {
-            socket.emit('my event', {data: 'I\'m connected!'});
-        });
+        function snd(){
+            message = document.getElementById("message")
+            if (message.value!="" || message.value!=" "){
+                socket.emit('message', {"message":message.value})
+            }
+        }
     </script>
 
 {% endblock %}

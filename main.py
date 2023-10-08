@@ -30,7 +30,7 @@ socket = SocketIO(app)
 #DB Tables
 mongo = mongo["NasaAppsHackathon"]
 Users=mongo.users
-Messages=mongo.db.messages
+Messages=mongo.messages
 Skills=mongo.db.skills
 Interests=mongo.db.interests
 
@@ -62,7 +62,7 @@ def login_post():
     if (Users.count_documents({"email":email, "password": passw})):
         session["logged_in"]=True
         usr=Users.find_one({"email":email, "password":passw})
-        session['usrname']=usr["email"]
+        session['username']=usr["userID"]
         return redirect("/")
     flash("User not found!")
     return redirect("/login")
@@ -88,7 +88,7 @@ def signup_post():
         return redirect("/signup")
     if (Users.count_documents({"email":email})==0):
         session["email"]=email
-        temp_user={"username":user, "password":passw, "email":email, "userID": username}
+        temp_user["user"]={"username":user, "password":passw, "email":email, "userID": username}
         return redirect("/otp")
     flash("Email Id already present!")
     return redirect("/signup")
@@ -105,8 +105,10 @@ def otp_var():
 @app.post("/otp")
 def post_otp():
     if encode(request.form.get("otp")) == session["otp"]:
-        Users.insert_one(temp_user)
+        Users.insert_one(temp_user["user"])
+        print(temp_user["user"])
         session["logged_in"]=True
+        session["username"]=temp_user["user"].get("userID")
         return redirect("/")
     flash("Wrong OTP!")
     return redirect("/otp")
@@ -114,29 +116,69 @@ def post_otp():
 @app.get("/")
 @login_required
 def home():
-    # print(Users.find_one({"email":"email@gmail.com"}))
-    return "Hello!"
+    usr=Users.find_one({"userID":session["username"]})
+    return render_template("index.html", user=usr)
+
+@app.get("/profile/edit")
+@login_required
+def profile():
+    usr = Users.find_one({"userID":session["username"]})
+    return render_template("editprofile.html", user=usr)
+
+@app.post("/profile/edit")
+@login_required
+def edit_profile():
+    bio = request.form.get("bio")
+    edu_qual = request.form.get("edu_qual")
+    skills = request.form.get("skill")
+
+    if bio!="" and edu_qual!="" and skills!="":
+        Users.update_one({"userID":session["username"]}, {"$set":{"bio":bio, "edu_qual":edu_qual, "skills": skills}})
+        return redirect("/")
+
+    return render_template("editprofile.html")
 
 #logout function
 @app.get("/logout")
+@login_required
 def logout():
     session.clear()
     flash("You have been logged out!")
     return redirect(url_for("login"))
 
+@app.get("/messages")
+@login_required
+def messages():
+    usr = Users.find_one({"userID":session["username"]})
+    if "contacts" in usr:
+        contacts = usr["contacts"]
+    else:
+        contacts=[]
+    return render_template("message.html", contacts=contacts)
+
 @app.get("/messages/<message_url>")
-def messages(message_url):
-    messages = Messages.find({"message_url":message_url})
-    return render_template("message.html", messages=messages)
+@login_required
+def Urlmessages(message_url):
+    messages = Messages.find_one({"message_url":message_url})
+    if session["username"] not in messages["auth"]:
+        flash("User Not Allowed!")
+        return redirect("/messages")
+    usr = Users.find_one({"userID":session["username"]})
+    if "contacts" in usr:
+        contacts = usr["contacts"]
+    else:
+        contacts=[]
+    return render_template("message.html", messages=messages["messages"], contacts=contacts)
 
 @socket.on('check_usrname')
 def check_usrname(json):
+    print(str(json))
     if Users.count_documents({"userID":json["username"]})!=0:
         socket.emit("username_not_available")
     else:
         socket.emit("username_available")
 
-@socket.on('my event')
+@socket.on('message')
 def handle_my_custom_event(json):
     print('received json: ' + str(json))
 
